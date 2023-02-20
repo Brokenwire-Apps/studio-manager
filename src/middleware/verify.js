@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const encr = require('./encrypt')
-const db = require("../models");
+const db = require("../interfaces");
 const User = db.users;
 
 exports.verify = (req,res,next) => {

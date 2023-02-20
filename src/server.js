@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const settings = require('../package.json');
 require('dotenv').config()
 
-const db = require("../src/models");
+const db = require("../src/interfaces");
 db.sequelize.sync();
 
 const authRoutes = require('./routes/admin/auth');

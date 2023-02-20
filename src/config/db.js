@@ -1,9 +1,9 @@
 module.exports = {
     HOST: "localhost",
-    USER: "root",
-    PASSWORD: "@RJMI*138VTwE%vH#wJP",
-    DB: "baseNode",
-    dialect: "mysql",
+    USER: process.env.DB_UN,
+    PASSWORD: process.env.DB_PW,
+    DB: process.env.DB_NAME,
+    dialect: "postgres",
     pool: {
         max: 5,
         min: 0,

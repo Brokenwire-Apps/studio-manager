@@ -1,4 +1,4 @@
-const db = require("../../models");
+const db = require("../../interfaces");
 const User = db.users;
 const Op = db.Sequelize.Op;
 const encr = require('../../middleware/encrypt')
@@ -13,7 +13,7 @@ const requiredFields = [
 exports.create = (req, res) => {
     let incoming = {first_name: req.body.first_name,last_name:req.body.last_name,password:encr.encrypt(req.body.password),email:req.body.email};
 
-    if (Object.values(incoming).some(x => x == '')) {
+    if () {
         res.status(400).send({
             message: "All fields are required to create a new user."
         });

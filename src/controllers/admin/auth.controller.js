@@ -1,4 +1,4 @@
-const db = require("../../models/index");
+const db = require("../../interfaces/index");
 const User = db.users;
 const encr = require('../../middleware/encrypt')
 const { comparePassword, verifyEmail, checkUnique } = require('../../middleware/verify')
@@ -13,36 +13,33 @@ const requiredFields = [
 
 exports.signUp = async (req, res) => {
     let incoming = {first_name: req.body.first_name,last_name: req.body.last_name,email: req.body.email,password: encr.encrypt(req.body.password)};
-
-    if (Object.values(incoming).some(x => x == '')) {
-        res.status(400).send({
-            message: "All fields are required to register a new user."
-        });
-    }
-
-    if(!verifyEmail(incoming.email)){
-        res.status(400).send({
-            message: "A valid email format is required."
-        });
-    }
-
-    if(await checkUnique(incoming.email) == true){
-        res.status(400).send({
-            message: "A user with that email has already registered."
-        });
-    }
-
     try {
+        if (Object.values(incoming).some(x => x == '')) {
+            res.status(400).json({
+                message: "A required field is missing."
+            });
+        } 
+
         const saved = await User.create(incoming);
         const access_token = jwt.sign({ id: saved.id }, process.env.JWT_SEC, {
             expiresIn: 86400
         })
 
         res.status(200).json({access_token})
-    } catch (error) {
-        res.status(500).send({
-            message: "There was an error creating the user."
-        });
+    } catch (err) {
+        if(!verifyEmail(incoming.email)){
+            res.status(400).json({
+                message: "Email is invalid"
+            });
+        } else if(await checkUnique(incoming.email) == true){
+            res.status(400).send({
+                message: err.errors[0].message
+            });
+        } else {
+            res.status(500).send({
+                message: Error
+            });
+        }
     }
     
 }
